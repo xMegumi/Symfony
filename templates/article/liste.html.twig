@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des articles{% endblock %}
+
+{% block main %}
+
+<div class="alert alert-success" role="alert">
+{% for message in app.flashes('success') %}
+    <div class="flash-notice">
+        {{ message }}
+    </div>
+{% endfor %}
+</div>
+
+<div class="d-flex flex-wrap gap-4 p-4">
+    {% for art in articles %}
+        <div class="card shadow-sm" style="width: 18rem;">
+            <div class="card-header bg-primary text-white">
+                <h5>Article {{ art.id }}</h5>
+            </div>
+            <div class="card-body">
+                {% if art.brochureFilename %}
+                    <div class="mb-3">
+                        <img src="{{ asset('uploads/brochures/' ~ art.brochureFilename) }}" alt="Brochure" style="width: 100%; height: auto;">
+                    </div>
+                {% endif %}
+
+                <p>
+                    <strong>ID :</strong> {{ art.id }}<br>
+                    <strong>Titre :</strong> {{ art.titre }}<br>
+                    <strong>Publié :</strong> {{ art.publie == 1 ? 'Oui' : 'Non' }}<br>
+                    <strong>Date :</strong> {{ art.date|date('d/m/Y H:i') }}
+                </p>
+                <h6>Contenu</h6>
+                <p class="text-muted">
+                    {{ art.texte|slice(0, 100) ~ '...' }}
+                </p>
+
+                <div class="d-flex justify-content-between">
+                    <a href="{{ path('app_article_modifier', {'id': art.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                    <a href="{{ path('app_article_supprimer', {'id': art.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?')">Supprimer</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
